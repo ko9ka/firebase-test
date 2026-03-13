@@ -1,11 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Firebase Test</title>
+<meta charset="UTF-8">
+<title>Firebase Requests</title>
 </head>
+
 <body>
 
-<h1>My Firebase Site</h1>
+<h2>Отправить запрос</h2>
+
+<form id="requestForm">
+  <input type="text" id="name" placeholder="Ваше имя" required>
+  <input type="text" id="message" placeholder="Сообщение" required>
+  <button type="submit">Отправить</button>
+</form>
+
+<script type="module">
+
+// 1. Импорт модулей Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 2. Конфигурация Firebase (вставь свои ключи)
+const firebaseConfig = {
+  apiKey: "ТВОЙ_API_KEY",
+  authDomain: "ТВОЙ_PROJECT.firebaseapp.com",
+  projectId: "ТВОЙ_PROJECT_ID",
+  storageBucket: "ТВОЙ_PROJECT.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
+};
+
+// 3. Инициализация Firebase
+const app = initializeApp(firebaseConfig);
+
+// 4. Подключение Firestore
+const db = getFirestore(app);
+
+// 5. Обработка формы
+const form = document.getElementById("requestForm");
+
+form.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const message = document.getElementById("message").value;
+
+  try {
+
+    await addDoc(collection(db, "requests"), {
+      name: name,
+      message: message,
+      date: new Date()
+    });
+
+    alert("Данные отправлены!");
+
+  } catch (error) {
+
+    console.error("Ошибка:", error);
+
+  }
+
+});
+
+</script>
 
 </body>
 </html>
